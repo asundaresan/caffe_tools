@@ -12,14 +12,16 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument( "data_folder", help = "Input folder" )
   parser.add_argument( "lmdb_folder", nargs = "?", default = "", help = "LMDB folder" )
-  parser.add_argument( "--validation_perc", "-V", default = 0, help="Percentage of dataset to use in validation" )
+  parser.add_argument( "--keep_aspect", "-A", action = "store_true", help="Keep aspect ratio" )
+  parser.add_argument( "--validation_percentage", "-V", default = 0.15, help="Percentage of dataset to use in validation" )
   parser.add_argument( "--verbose", "-v", action="count", default = 0, help="Verbosity level" )
   args = parser.parse_args()
 
   data_folder = args.data_folder
   lmdb_folder = args.lmdb_folder if args.lmdb_folder != "" else "%s/lmdb" % args.data_folder
+  shape = (227,227)
 
-  validation_percentage = 0.15
+  validation_percentage = args.validation_percentage
   training_db_file = '%s/train_lmdb' % lmdb_folder
   validation_db_file = '%s/validation_lmdb' % lmdb_folder
 
@@ -35,10 +37,10 @@ if __name__ == "__main__":
   
   num_train_data = int( math.ceil( ( 1 - validation_percentage ) * len( all_data ) ) )
   training_data = all_data[0:num_train_data]
-  print( "Writing %s (%d inputs)" % ( training_db_file, len( training_data ) ) )
-  make_lmdb( training_db_file, training_data, 227, 227, verbose = args.verbose )
+  print( "Training: writing %s (%d inputs)" % ( training_db_file, len( training_data ) ) )
+  make_lmdb( training_db_file, training_data, shape, keep_aspect = args.keep_aspect, verbose = args.verbose )
   
   validation_data = all_data[num_train_data:]
-  print( "Creating %s (%d inputs)" % ( validation_db_file, len( validation_data ) ) )
-  make_lmdb( validation_db_file, validation_data, 227, 227, verbose = args.verbose )
+  print( "Validation: writing %s (%d inputs)" % ( validation_db_file, len( validation_data ) ) )
+  make_lmdb( validation_db_file, validation_data, shape, keep_aspect = args.keep_aspect, verbose = args.verbose )
   

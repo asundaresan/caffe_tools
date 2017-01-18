@@ -17,16 +17,25 @@ Pre-processing the data
 ~~~~~~~~~~~~~~~~~~~~~~~
 The first step processes the input images to create the LMDB set for training and validation. It does the following 
 - Perform histogram equalization across the channels
-- Scale the image to a small size (227x227)
-  Does this mean that the aspect ratio is changed?
+- Scale the image to a small size (227x227) (keeping aspect ratio is optional)
 
-Run::
+To create the LMDB::
 
   python scripts/create_lmdb.py data/images data/lmdb
+
+If it is desired to keep the aspect ratio, use the following command instead::
+
+  python scripts/create_lmdb.py data/images data/lmdb -A
   
 Generate the mean image::
 
   compute_image_mean -backend=lmdb data/lmdb/train_lmdb data/mean.binaryproto
+
+To check the image transformation used by ``create_lmdb.py``, use::
+
+  python scripts/transform.py data/images/*.jpg -vv 
+
+You may use the ``-A`` option to keep the aspect ratio and ``--help`` for help.
 
 Train a cat/dog classifier
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +47,7 @@ Train::
 
 Keep track of the learning curve.::
 
-  python scripts/plot_learning_curve.py models/caffe_model_1/model_1_train.log -C
+  python ../../scripts/plot_learning_curve.py model_1_train.log -C
 
 Train a cat/dog classifier using transfer learning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -50,6 +59,6 @@ Train::
 
 Keep track of the learning curve::
 
-  python scripts/plot_learning_curve.py models/caffe_model_2/model_2_train.log -C
+  python ../../scripts/plot_learning_curve.py model_2_train.log -C
 
 

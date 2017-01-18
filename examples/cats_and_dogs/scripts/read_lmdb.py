@@ -26,6 +26,13 @@ if __name__ == "__main__":
       else:
         data = caffe.io.datum_to_array(datum)
         print( "%6d: {%s: label=%s, data.shape=%s}" % ( idx, key, label, list( data.shape ) ) )
+        if args.verbose > 1:
+          cv2.imshow( "Image", data )
+          ret = cv2.waitKey()
+          if chr( ret ).lower() == "q":
+            break
+
+
     else:
       break
 
