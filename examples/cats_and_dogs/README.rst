@@ -1,7 +1,7 @@
 Cats and dogs example
 ---------------------
 
-This example has been developed using a kaggle data set containing cats and dogs. 
+This example has been developed using a kaggle data set containing cats and dogs and is based on the //github.com/adilmoujahid/deeplearning-cats-dogs-tutorial.git repository. 
 
 All the instructions are to be performed from the cats_and_dogs examples folder.
 
@@ -28,6 +28,9 @@ Generate the mean image::
 
   compute_image_mean -backend=lmdb data/lmdb/train_lmdb data/mean.binaryproto
 
+Train a cat/dog classifier
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Train::
   
   cd models/caffe_model_1
@@ -35,5 +38,18 @@ Train::
 
 Keep track of the learning curve.::
 
-  python ~/projects/deeplearning-cats-dogs-tutorial/caffe_models/code/plot_learning_curve.py ~/cats_and_dogs/model_1_train.log ~/cats_and_dogs/caffe_model_1_learning_curve.png
+  python scripts/plot_learning_curve.py models/caffe_model_1/model_1_train.log -C
+
+Train a cat/dog classifier using transfer learning
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Train::
+
+  cd models/caffe_model_2
+  caffe train --solver solver_2.prototxt 2>&1 | tee model_2_train.log
+
+Keep track of the learning curve::
+
+  python scripts/plot_learning_curve.py models/caffe_model_2/model_2_train.log -C
+
 
