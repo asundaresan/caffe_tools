@@ -13,7 +13,8 @@ if __name__ == "__main__":
   parser.add_argument( "data_folder", help = "Input folder" )
   parser.add_argument( "lmdb_folder", nargs = "?", default = "", help = "LMDB folder" )
   parser.add_argument( "--keep_aspect", "-A", action = "store_true", help="Keep aspect ratio" )
-  parser.add_argument( "--validation_percentage", "-V", default = 0.15, help="Percentage of dataset to use in validation" )
+  parser.add_argument( "--validation_percentage", "-V", type = float, default = 0.15, help="Percentage of dataset to use in validation" )
+  parser.add_argument( "--seed", "-S", type = int, default = 0, help="Random seed value" )
   parser.add_argument( "--verbose", "-v", action="count", default = 0, help="Verbosity level" )
   args = parser.parse_args()
 
@@ -27,7 +28,11 @@ if __name__ == "__main__":
 
   all_files = list( img for img in glob.glob( "%s/train/*jpg" % data_folder ) )
   print( "Loading %d images from %s" % ( len( all_files ), data_folder ) )
-  random.seed( 1 )
+  if args.seed > 0:
+    print( "Random seed value: %d" % args.seed )
+    random.seed( args.seed )
+  else:
+    random.seed( )
   random.shuffle( all_files )
   all_data = list()
   for f in all_files:
