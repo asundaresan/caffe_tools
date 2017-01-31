@@ -1,7 +1,7 @@
 Cats and dogs example
 ---------------------
 
-This example has been developed using a kaggle data set containing cats and dogs and is based on the //github.com/adilmoujahid/deeplearning-cats-dogs-tutorial.git repository. 
+This example has been developed using a kaggle data set containing cats and dogs and is based on the https://github.com/adilmoujahid/deeplearning-cats-dogs-tutorial.git repository. The accompanying blog entry is http://adilmoujahid.com/posts/2016/06/introduction-deep-learning-python-caffe/.
 
 All the instructions are to be performed from the cats_and_dogs examples folder.
 
@@ -40,9 +40,12 @@ You may use the ``-A`` option to keep the aspect ratio and ``--help`` for help.
 Train a cat/dog classifier
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Change CWD::
+
+  cd models/caffe_model_1
+
 Train::
   
-  cd models/caffe_model_1
   caffe train --solver solver_1.prototxt 2>&1 | tee model_1_train.log
 
 Keep track of the learning curve.::
@@ -52,10 +55,17 @@ Keep track of the learning curve.::
 Train a cat/dog classifier using transfer learning
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Train::
+Change CWD::
 
   cd models/caffe_model_2
-  caffe train --solver solver_2.prototxt 2>&1 | tee model_2_train.log
+
+Download the trained bvlc_reference_caffenet as a starting point of building our cat/dog classifier using transfer learning. This model was trained on the ImageNet dataset which contains millions of images across 1000 categories. We will use the fine-tuning strategy for training our model.:: 
+
+  wget http://dl.caffe.berkeleyvision.org/bvlc_reference_caffenet.caffemodel
+
+Train::
+
+  caffe train --solver solver_2.prototxt --weights bvlc_reference_caffenet.caffemodel 2>&1 | tee model_2_train.log
 
 Keep track of the learning curve::
 
